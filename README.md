@@ -1,24 +1,5 @@
-# yuso-frontend
+# 鱼搜索-聚合搜索平台前端
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+> 作者：[程序员鱼皮](https://github.com/liyupi)
+> 
+> 仅分享于 [编程导航知识星球](https://yupi.icu)
