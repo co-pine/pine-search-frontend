@@ -1,12 +1,26 @@
 <template>
   <div class="index-page">
-    <a-input-search
+    <!--<a-input-search-->
+    <!--  v-model:value="searchText"-->
+    <!--  placeholder="请输入搜索关键词"-->
+    <!--  enter-button="搜索"-->
+    <!--  size="large"-->
+    <!--  @search="onSearch"-->
+    <!--/>-->
+    <a-auto-complete
       v-model:value="searchText"
-      placeholder="input search text"
-      enter-button="Search"
-      size="large"
-      @search="onSearch"
+      :options="options"
+      style="width: 85%"
+      placeholder="input here"
+      @select="onSearch"
+      @search="getSearchPrompt"
     />
+    <a-button
+      type="primary"
+      style="left-margin: 10px; width: 15%"
+      @click="onSearch(searchText)"
+      >Primary Button</a-button
+    >
     <MyDivider />
     <a-tabs v-model:activeKey="activeKey" @change="onTabChange">
       <a-tab-pane key="post" tab="文章">
@@ -38,9 +52,11 @@ const userList = ref([]);
 
 const pictureList = ref([]);
 
+const options = ref<any[]>([]);
+
 const route = useRoute();
 const router = useRouter();
-const activeKey = route.params.category;
+const activeKey = route.params.category ? route.params.category : "post";
 
 const initSearchParams = {
   type: activeKey,
@@ -102,7 +118,7 @@ const loadAllData = (params: any) => {
  * @param params
  */
 const loadData = (params: any) => {
-  const { type } = params;
+  const { type = "post" } = params;
   if (!type) {
     message.error("类别为空");
     return;
@@ -128,8 +144,9 @@ watchEffect(() => {
   searchParams.value = {
     ...initSearchParams,
     text: route.query.text,
-    type: route.params.category,
+    type: route.params.category ? route.params.category : "post",
   } as any;
+  console.log(route.params.category);
   loadData(searchParams.value);
 });
 
@@ -147,5 +164,20 @@ const onTabChange = (key: string) => {
     path: `/${key}`,
     query: searchParams.value,
   });
+};
+const getSearchPrompt = (value: string) => {
+  options.value = [];
+  console.log(value);
+  if (value) {
+    myAxios.get("search/getSearchPrompt?keyword=" + value).then((res: any) => {
+      for (let i = 0; i < res.length; i++) {
+        const tempMap = {
+          value: res[i],
+          color: "red",
+        };
+        options.value.push(tempMap);
+      }
+    });
+  }
 };
 </script>
